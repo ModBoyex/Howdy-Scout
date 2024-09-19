@@ -52,7 +52,7 @@ async function fetchTeamInfo() {
 function addTeamToTeamList(team) {
   new_option = team_option_template.cloneNode();
   new_option.id = team_index;
-  new_option.textContent = team.nickname;
+  new_option.textContent = `${team.team_number} - ${team.nickname}`;
   new_option.value = team.key;
   team_list.appendChild(new_option);
 
@@ -61,7 +61,8 @@ function addTeamToTeamList(team) {
 
 // Function to fetch team information from Blue Alliance API
 async function fetchEventTeamsInfo() {
-  const event_teams_url = `https://www.thebluealliance.com/api/v3/events/${this.value}/teams`;
+  // API endpoint for team information
+  const event_teams_url = `https://www.thebluealliance.com/api/v3/event/${this.value}/teams`;
 
   resetStats();
 
