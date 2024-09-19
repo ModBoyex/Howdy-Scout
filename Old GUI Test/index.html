@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Old Howdy Scouting</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.plot.ly/plotly-2.30.0.min.js" charset="utf-8"></script>
+  <script src="APIInterface.js" charset="utf-8"></script>
+  <script src="ScoutingData.js" charset="utf-8"></script>
+</head>
+
+<body>
+  <div class="box" style="height: 7%;">
+    <a class="menuButton" href="index.html">Main Page</a>
+    <a class="menuButton" href="compair.html">Compair Page</a>
+  </div>
+  
+  <div class="top_box" style="height: 20%; flex-direction: column; justify-content:flex-end;">
+    <select name="team_event_picker" id="team_event_picker">
+      <option>None</option>
+    </select>
+
+    <div class="widget" style="height: 50%; width: 98%;">
+      <div class="box" style="justify-content: left;">
+        <div class="team_name_text" id="team_name" style="margin-left: 3vw;">Team Name</div>
+      </div>
+      <div class="box" style="width: 10%; height: 100%; justify-content: right;">
+        <input type="numeric" id="team_input" placeholder="99999" autocomplete="off" style="margin-right: 10px;"></input>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom_box" style="height: 75%;">
+    <div class="stat_box">
+      <div class="stat_widget">
+        <div class="box" style="flex-direction: column;">
+          <div class="info_label">Rank:</div>
+          <div class="number_widget">
+            <div class="stat_num" id="team_rank">-</div>
+          </div>
+        </div>
+
+        <div class="box" style="flex-direction: column;">
+          <div class="info_label">EPA:</div>
+          <div class="number_widget">
+            <div class="stat_num" id="team_epa">-</div>
+          </div>
+        </div>
+
+        <div class="box" style="flex-direction: column;">
+          <div class="info_label">OPR:</div>
+          <div class="number_widget">
+            <div class="stat_num" id="team_opr">-</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="graph_box">
+      <div class="graph_widget">
+        <div class="inner_graph" id="graph1">
+          <div class="box" style="height: 10%;">
+            <select id="stat_picker" style="height: 50%;">
+              <option>None</option>
+            </select>
+          </div>
+          <div id="graph"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="clone"></div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
