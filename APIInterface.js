@@ -62,7 +62,8 @@ function addTeamToTeamList(team) {
 // Function to fetch team information from Blue Alliance API
 async function fetchEventTeamsInfo() {
   // API endpoint for team information
-  const event_teams_url = `https://www.thebluealliance.com/api/v3/event/${this.value}/teams`;
+  event_key = this.value;
+  const event_teams_url = `https://www.thebluealliance.com/api/v3/event/${event_key}/teams`;
 
   resetStats();
 
@@ -70,6 +71,74 @@ async function fetchEventTeamsInfo() {
     current_data = await requestAPI(event_teams_url, APIKey);
     console.log(current_data);
     current_data.forEach((team) => addTeamToTeamList(team));
+  } catch (error) {
+    console.error(error);
+  }
+
+  var team_option_list = document.getElementsByClassName("glassOption");
+  for (let i = 0; i < team_option_list.length; i++) {
+    team_option_list[i].classList.add("selected");
+
+    team_option_list[i].onclick = () => {
+      // Check if the element has the "selected" class
+      if (!team_option_list[i].classList.contains("selected")) {
+        // Add the "selected" class to indicate the item is selected
+        team_option_list[i].classList.add("selected");
+        team_option_list[i].style.backgroundColor = "#00000033"; // Mark selected
+      } else {
+        // Remove the "selected" class
+        team_option_list[i].classList.remove("selected");
+        team_option_list[i].style.backgroundColor = "#FFFFFF33"; // Mark deselected
+      }
+
+      // Log whether the element is selected or not
+      console.log("Is selected: " + team_option_list[i].classList.contains("selected"));
+      console.log("I clicked on " + team_option_list[i].textContent);
+
+      updateStatGraph();
+    }
+  }
+}
+
+
+function addTeamStat(opr_list, rank_list, this_team_number, this_team_name) {
+  new_option = team_stat_chart_template.cloneNode(true);
+  new_option.id = team_stat_index;
+  new_option.childNodes.item(1).textContent = this_team_name;
+  new_option.childNodes.item(3).textContent = `${this_team_number.substring(3)}`;
+  rank_list.rankings.forEach((rank) => {
+    if (rank.team_key == this_team_number) {
+      new_option.childNodes.item(5).textContent = `${rank.rank}`;
+    }
+  });
+  new_option.childNodes.item(7).textContent = `${opr_list.oprs[this_team_number].toFixed(2)}`;
+
+
+  team_stat_chart.appendChild(new_option);
+}
+
+async function updateStatGraph() {
+  // API endpoint for team information
+  const event_opr_url = `https://www.thebluealliance.com/api/v3/event/${event_key}/oprs`;
+  const event_rank_url = `https://www.thebluealliance.com/api/v3/event/${event_key}/rankings`;
+
+  var opr_list;
+  var rank_list;
+
+  team_stat_chart.innerHTML = "";
+  team_stat_chart.appendChild(team_stat_chart_labels);
+  team_stat_index = 0;
+
+  try {
+    opr_list = await requestAPI(event_opr_url, APIKey);
+    rank_list = await requestAPI(event_rank_url, APIKey);
+
+    option_list = document.getElementsByClassName("glassOption");
+    for (let i = 1; i < option_list.length; i++) {
+      if (!option_list[i].classList.contains("selected")) {
+        addTeamStat(opr_list, rank_list, option_list[i].value, option_list[i].textContent.split(" - ")[1]);
+      }
+    }
   } catch (error) {
     console.error(error);
   }

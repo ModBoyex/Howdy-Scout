@@ -3,11 +3,11 @@
 
 <head>
   <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
-    <title>Howdy Scouting</title>
-    <link href="style.css" rel="stylesheet" type="text/css" />
-    <script src="https://cdn.plot.ly/plotly-2.30.0.min.js" charset="utf-8"></script>
-    <script src="APIInterface.js" charset="utf-8"></script>
+  <meta name="viewport" content="width=device-width">
+  <title>Howdy Scouting</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.plot.ly/plotly-2.30.0.min.js" charset="utf-8"></script>
+  <script src="APIInterface.js" charset="utf-8"></script>
 </head>
 
 <body>
@@ -15,7 +15,7 @@
     <!-- Event Selection -->
     <div class="box" style="height: 15%;">
       <div class="glass">
-        <select class="glassInner font" id="event_dropdown">
+        <select class="glassInner font" style="text-wrap: wrap;" id="event_dropdown">
           <option id="option">Event</option>
         </select>
       </div>
@@ -24,8 +24,13 @@
     <!-- Event Team List -->
     <div class="box" style="height: 85%;">
       <div class="glass">
-        <div class="glassInner" style="overflow-y: scroll; flex-direction: column; justify-content: flex-start; align-items: flex-start;" id="team_list">
-          <div class="glassOption font" style="--size: 0.9vw; text-indent: 10px; min-height: 35px; justify-content: center;" id="team_option">Team</div>
+        <div class="glassInner" style="overflow-y: scroll; flex-direction: column; justify-content: flex-start;"
+          id="team_list">
+          <div class="glassOption font"
+            style="display: flex; text-indent: 10px; min-height: 35px; max-height: 35px; align-items: center;"
+            id="team_option">
+            <div>Team</div>
+          </div>
         </div>
       </div>
     </div>
@@ -48,25 +53,25 @@
       <!-- Team API Stats -->
       <div class="box" style="width: 35%;">
         <div class="glass">
-          <div class="glassInner" style="flex-direction: column; justify-content: flex-start;">
-            <div class="box" style="height: 5px;"></div>
-            <div class="box" style="height: 25px;">
+          <div class="glassInner" style="overflow: scroll; flex-direction: column; justify-content: flex-start;"
+            id="team_stat_chart">
+            <div class="box" style="min-height: 30px; max-height: 25px; margin-top: 5px;" id="team_stat_chart_labels">
               <div class="font" id="NameLable" style="width: 90%; border-right: 2px solid rgba(0, 0, 0, 0.1);">Name
               </div>
               <div class="font" id="NumberLable" style="width: 90%; border-right: 2px solid rgba(0, 0, 0, 0.1);">Number
               </div>
               <div class="font" id="RankLable" style="width: 90%; border-right: 2px solid rgba(0, 0, 0, 0.1);">Rank
               </div>
-              <div class="font" id="OPRLable" style="width: 90%; border-right: 2px solid rgba(0, 0, 0, 0.1);">OPR</div>
-              <div class="font" id="EPALable" style="width: 90%; border-right: 2px solid rgba(0, 0, 0, 0.1);">EPA</div>
+              <div class="font" id="OPRLable" style="width: 90%; border-right: 2px solid rgba(0, 0, 0, 0.1);">OPR </div>
             </div>
-            <div class="box" style="height: 25px; background-color: rgba(0, 0, 0, 0.1);">
+            <div class="box" style="min-height: 30px; max-height: 25px; background-color: rgba(0, 0, 0, 0.1);" ,
+              id="team_stat_chart_option">
               <div class="font" id="NameLable"
-                style="overflow: hidden; width: 90%; border-right: 2px solid rgba(0, 0, 0, 0.1);">-</div>
+                style="scrollbar-width: none; overflow: scroll; white-space:nowrap; width: 90%; border-right: 2px solid rgba(0, 0, 0, 0.1);">
+                -</div>
               <div class="font" id="NumberLable" style="width: 90%; border-right: 2px solid rgba(0, 0, 0, 0.1);">-</div>
               <div class="font" id="RankLable" style="width: 90%; border-right: 2px solid rgba(0, 0, 0, 0.1);">-</div>
               <div class="font" id="OPRLable" style="width: 90%; border-right: 2px solid rgba(0, 0, 0, 0.1);">-</div>
-              <div class="font" id="EPALable" style="width: 90%; border-right: 2px solid rgba(0, 0, 0, 0.1);">-</div>
             </div>
           </div>
         </div>
@@ -77,41 +82,22 @@
     <div class="box" style="height: 35%;">
       <div class="glass">
         <div class="box" style="width: 97.5%; justify-content: space-around; overflow-x: scroll;">
-          <div class="imageLabel">Team!</div>
-          <img style="outline: 3px solid rgba(255, 255, 255, 0.1); border-radius: 8px; height: 95%;"
-            src="https://atxrobotics.sharepoint.com/sites/howdyscout/Shared%20Documents/2024/2024txcmp1/Teams/1745/04-04-2024%2011_45_30.jpg">
-          </img>
-          
-          <img style="outline: 3px solid rgba(255, 255, 255, 0.1); border-radius: 8px; height: 95%;"
-            src="https://atxrobotics.sharepoint.com/sites/howdyscout/Shared%20Documents/2024/2024txcmp1/Teams/3561/04-04-2024%2011_50_30.jpg">
-          </img>
-          
-          <div class="imageLabel">Team!</div>
-          <img style="outline: 3px solid rgba(255, 255, 255, 0.1); border-radius: 8px; height: 95%;"
-            src="https://atxrobotics.sharepoint.com/sites/howdyscout/Shared%20Documents/2024/2024txcmp1/Teams/6377/04-04-2024%2010_34_59.jpg">
-          </img>
-          
-          <img style="outline: 3px solid rgba(255, 255, 255, 0.1); border-radius: 8px; height: 95%;"
-            src="https://atxrobotics.sharepoint.com/sites/howdyscout/Shared%20Documents/2024/2024txsan/Teams/9054/03-14-2024%2019_59_48.jpg">
-          </img>
-
-          <div class="imageLabel">Team!</div>
-          <img style="outline: 3px solid rgba(255, 255, 255, 0.1); border-radius: 8px; height: 95%;"
-            src="https://atxrobotics.sharepoint.com/sites/howdyscout/Shared%20Documents/2024/2024txcmp1/Teams/6377/04-04-2024%2010_34_59.jpg">
-          </img>
-          
-          <img style="outline: 3px solid rgba(255, 255, 255, 0.1); border-radius: 8px; height: 95%;"
-            src="https://atxrobotics.sharepoint.com/sites/howdyscout/Shared%20Documents/2024/2024txsan/Teams/9054/03-14-2024%2019_59_48.jpg">
-          </img>
-
-          <div class="imageLabel">Team!</div>
-          <img style="outline: 3px solid rgba(255, 255, 255, 0.1); border-radius: 8px; height: 95%;"
-            src="https://atxrobotics.sharepoint.com/sites/howdyscout/Shared%20Documents/2024/2024txcmp1/Teams/6377/04-04-2024%2010_34_59.jpg">
-          </img>
-          
-          <img style="outline: 3px solid rgba(255, 255, 255, 0.1); border-radius: 8px; height: 95%;"
-            src="https://atxrobotics.sharepoint.com/sites/howdyscout/Shared%20Documents/2024/2024txsan/Teams/9054/03-14-2024%2019_59_48.jpg">
-          </img>
+          <div
+            style="height: 100%; display: flex; align-items: center; justify-content: space-around; flex-direction: row;" id="team_pictures">
+            <div class="imageLabel">Team!</div>
+            <img
+              style="outline: 2px solid rgba(255, 255, 255, 0.1); border-radius: 8px; height: 95%; margin-right: 10px;"
+              src="https://atxrobotics.sharepoint.com/sites/howdyscout/Shared%20Documents/2024/2024txcmp1/Teams/1745/04-04-2024%2011_45_30.jpg">
+            </img>
+            <img
+              style="outline: 2px solid rgba(255, 255, 255, 0.1); border-radius: 8px; height: 95%; margin-right: 10px;"
+              src="https://atxrobotics.sharepoint.com/sites/howdyscout/Shared%20Documents/2024/2024txcmp1/Teams/1745/04-04-2024%2011_45_30.jpg">
+            </img>
+            <img
+              style="outline: 2px solid rgba(255, 255, 255, 0.1); border-radius: 8px; height: 95%; margin-right: 10px;"
+              src="https://atxrobotics.sharepoint.com/sites/howdyscout/Shared%20Documents/2024/2024txcmp1/Teams/1745/04-04-2024%2011_45_30.jpg">
+            </img>
+          </div>
         </div>
       </div>
     </div>

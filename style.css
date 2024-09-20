@@ -90,7 +90,6 @@ body {
     color: white;
     font-size: var(--size);
     font-family: var(--font);
-    text-wrap: wrap;
 }
 
 .imageLabel {
