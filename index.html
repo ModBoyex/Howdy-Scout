@@ -8,6 +8,7 @@
   <link href="style.css" rel="stylesheet" type="text/css" />
   <script src="https://cdn.plot.ly/plotly-2.30.0.min.js" charset="utf-8"></script>
   <script src="APIInterface.js" charset="utf-8"></script>
+  <script src="ScoutingData.js" charset="utf-8"></script>
 </head>
 
 <body>
@@ -42,10 +43,10 @@
       <div class="box" style="width: 65%;">
         <div class="glass">
           <div class="glassInner" style="flex-direction: column;">
-            <select class="glassInner font" style="height: 5%; width: 25%; margin-top: 4px;">
-              <option>Pick Stat</option>
+            <select class="glassInner font" style="height: 5%; width: 25%; margin-top: 4px;" id="stat_dropdown">
+              <option id="stat_option">Pick Stat</option>
             </select>
-            <div class="box" style="height: 95%;"></div>
+            <div class="box" style="height: 95%;" id="stat_graph"></div>
           </div>
         </div>
       </div>
@@ -83,7 +84,8 @@
       <div class="glass">
         <div class="box" style="width: 97.5%; justify-content: space-around; overflow-x: scroll;">
           <div
-            style="height: 100%; display: flex; align-items: center; justify-content: space-around; flex-direction: row;" id="team_pictures">
+            style="height: 100%; display: flex; align-items: center; justify-content: space-around; flex-direction: row;"
+            id="team_pictures">
             <div class="imageLabel">Team!</div>
             <img
               style="outline: 2px solid rgba(255, 255, 255, 0.1); border-radius: 8px; height: 95%; margin-right: 10px;"
