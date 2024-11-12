@@ -499,8 +499,13 @@ function getTeamScoutData(team_num) {
 function setup_graph(scouting_data) {
 	var data = [];
 	var scouters = [];
-	for (let j = 0; j < scouting_data.length; j++) {
-		scouters.push(scouting_data[j].scouted_by);
+
+	scouting_data["data"].sort((a, b) => a.match_number - b.match_number)
+
+	console.log(scouting_data["data"])
+	for (const key in scouting_data["data"]) {
+		obj = scouting_data["data"][key]
+		scouters.push(obj.scouted_by);
 	}
 	var trace = {
 		x: [],
@@ -512,11 +517,15 @@ function setup_graph(scouting_data) {
 		name: current_stat,
 		type: "bar",
 	};
-	for (let j = 0; j < scouting_data.length; j++) {
-		trace.x.push("(".concat(scouting_data[j].match_number, ")"));
-		trace.y.push(scouting_data[j][current_stat]);
-		trace.text.push(scouting_data[j][current_stat]);
+
+	for (const key in scouting_data["data"]) {
+		obj = scouting_data["data"][key]
+		console.log(obj)
+		trace.x.push("(".concat(obj.match_number, ")"));
+		trace.y.push(obj[current_stat]);
+		trace.text.push(obj[current_stat]);
 	}
+
 	console.log(trace);
 	data.push(trace);
 
