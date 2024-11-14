@@ -496,82 +496,70 @@ function getTeamScoutData(team_num) {
 	return filtered_data;
 }
 
-function setup_graph(scouting_data) {
-	var data = [];
-	var scouters = [];
+function setup_graph(scouting_data, team_number, selecting) {
+	if(selecting) {
+		var data = [];
+		var scouters = [];
 
-	scouting_data["data"].sort((a, b) => a.match_number - b.match_number)
+		filtered_scouting_data = scouting_data["data"].filter((e) => e["frc_team"] == team_number && e["event_key"] == event_key)
+		filtered_scouting_data.sort((a, b) => a.match_number - b.match_number)
 
-	console.log(scouting_data["data"])
-	for (const key in scouting_data["data"]) {
-		obj = scouting_data["data"][key]
-		scouters.push(obj.scouted_by);
+		console.log(filtered_scouting_data)
+		for (const key in filtered_scouting_data) {
+			obj = filtered_scouting_data[key]
+			scouters.push(obj.scouted_by);
+		}
+		var trace = {
+			x: [],
+			y: [],
+			text: [],
+			customdata: scouters,
+			hovertemplate:
+				"<i>Notes</i>: %{y}" + "<br><i>Scouter</i>: %{customdata}</br>",
+			name: team_number,
+			type: "line"
+		};
+
+		for (const key in filtered_scouting_data) {
+			obj = filtered_scouting_data[key]
+			trace.y.push(obj[current_stat]);
+			trace.text.push(obj[current_stat]);
+		}
+		console.log(filtered_scouting_data.keys())
+		trace.x = [...Array(filtered_scouting_data.length).keys()];
+
+		console.log(trace);
+		data.push(trace);
+
+		if (plot.data) {
+			data = [...plot.data, ...data]
+			Plotly.react(plot, data, layout);
+		} else {
+			Plotly.newPlot(plot, data, layout);
+		}
+		console.log(plot.data)
+	} else {
+		const newData = plot.data.filter((trace) => trace["name"] != team_number)
+
+		Plotly.react(plot, newData, plot.layout)
 	}
-	var trace = {
-		x: [],
-		y: [],
-		text: [],
-		customdata: scouters,
-		hovertemplate:
-			"<i>Notes</i>: %{y}" + "<br><i>Scouter</i>: %{customdata}</br>",
-		name: current_stat,
-		type: "bar",
-	};
-
-	for (const key in scouting_data["data"]) {
-		obj = scouting_data["data"][key]
-		console.log(obj)
-		trace.x.push("(".concat(obj.match_number, ")"));
-		trace.y.push(obj[current_stat]);
-		trace.text.push(obj[current_stat]);
-	}
-
-	console.log(trace);
-	data.push(trace);
-
-	var container = document.getElementById("stat_graph");
-	var layout = {
-		barmode: "group",
-		autosize: true,
-		width: container.offsetWidth,
-		height: container.offsetHeight,
-		margin: {
-			l: 30,
-			r: 10,
-			b: 45,
-			t: 5,
-			pad: 4,
-		},
-		paper_bgcolor: "#FFFFFF00",
-		plot_bgcolor: "#FFFFFF00",
-		barcornerradius: 5,
-		showlegend: false,
-		xaxis: {
-			title: "Qual Matches",
-			titlefont: {
-				size: 16,
-				color: "rgb(150, 150, 150)",
-			},
-			tickfont: {
-				size: 14,
-				color: "rgb(150, 150, 150)",
-			},
-		},
-
-		yaxis: {
-			tickfont: {
-				size: 14,
-				color: "rgb(150, 150, 150)",
-			},
-		},
-	};
-
-	Plotly.newPlot("stat_graph", data, layout, { displayModeBar: false });
+}
+  
+function updateStatGraph(team_number, selecting) {
+	setup_graph(scouting_data, team_number, selecting);
 }
 
-function updateStatGraph() {
-	current_stat = this.value;
-	setup_graph(scouting_data);
+function changeStatGraph() {
+	if (this.value && this.value != current_stat) {
+		current_stat  = this.value;
+
+		Plotly.react(plot, [], layout)
+
+		selected_teams.forEach((team) => {
+			updateStatGraph(team, true)
+		})
+	} 
+
 }
 
 async function getEntries() {
@@ -591,7 +579,15 @@ async function setupStatPicker() {
 		if (typeof value == typeof 0 && key != "match_number") {
 			clone = scout_stat_template.cloneNode();
 			clone.textContent = key;
+			clone.value = key
 			scout_stat_picker.appendChild(clone);
 		}
 	}
+}
+
+function clearPlot () {
+	Plotly.purge(plot)
+	selected_teams = []
+	scout_stat_picker.value = "none"
+	current_stat = undefined
 }
