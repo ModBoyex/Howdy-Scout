@@ -92,11 +92,6 @@ body {
     font-family: var(--font);
 }
 
-.imageLabel {
-    transform: rotate(-90deg);
-}
-
-
 /* Styling the scroll bar */
 * {
     scrollbar-width: thin;
@@ -138,4 +133,37 @@ body {
     min-height: 30px; 
     max-height: 25px; 
     background-color: rgba(0, 0, 0, 0.1);
+}
+
+#team_pictures {
+    height: 100%; 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-around; 
+    flex-direction: row;
+}
+
+
+.team_image {
+    border-radius: 8px; 
+    height: 95%; 
+    margin-right: 10px;
+}
+
+.robot_image_container {
+    padding:5px;
+    margin:5px;
+    height:100%;
+    display:flex;
+    background-color: #00000033;
+}
+
+.imageLabel {
+    writing-mode: vertical-lr;
+    text-orientation: sideways-right;
+    margin-right:2px
+}
+
+.hidden {
+    display:none;
 }

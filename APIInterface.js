@@ -100,9 +100,10 @@ async function fetchEventTeamsInfo() {
       console.log("I clicked on " + team_option_list[i].textContent);
 
       updateStatGraph(team_number, team_option_list[i].classList.contains("selected"));
+      updateStatsTable()
+      updateRobotImages(team_number, team_option_list[i].classList.contains("selected"))
     }
   }
-  updateStatsTable()
 }
 
 
@@ -130,8 +131,6 @@ async function updateStatsTable() {
   var opr_list;
   var rank_list;
 
-  team_stat_chart.innerHTML = "";
-  team_stat_chart.appendChild(team_stat_chart_labels);
   team_stat_index = 0;
 
   try {
@@ -142,15 +141,35 @@ async function updateStatsTable() {
 
     let rows = []
     for (let i = 1; i < option_list.length; i++) {
-      if (!option_list[i].classList.contains("selected")) {
+      if (option_list[i].classList.contains("selected")) {
         rows.push(getTeamStats(opr_list, rank_list, option_list[i].value, option_list[i].textContent.split(" - ")[1]))
       }
     }
 
     rows.sort((a,b) => a.childNodes.item(5).textContent - b.childNodes.item(5).textContent)
+    team_stat_chart.innerHTML = "";
+    team_stat_chart.appendChild(team_stat_chart_labels);  
     team_stat_chart.append(...rows)
   } catch (error) {
     console.error(error);
   }
 }
 
+function updateRobotImages(team_number, selected) {
+  var container = document.querySelector("#team_pictures")
+  if (selected) {
+    const images = getImages()
+
+    let element = document.querySelector(".robot_image_container").cloneNode(true)
+    element.className = "robot_image_container"
+    element.querySelector("img")["src"] = images[team_number]
+    element.id = "robot_image_" + team_number
+    element.querySelector(".imageLabel").textContent = team_number
+
+    element.classList.remove("hidden")
+    
+    container.append(element)
+  } else {
+    document.querySelector(`#robot_image_${team_number}`).remove()
+  }
+}

@@ -1,3 +1,13 @@
+const demo_images = {
+	"118": "https://i.imgur.com/A0CFArb.jpeg",
+	"1477": "https://i.imgur.com/aOSnrdQ.jpeg",
+	"231": "https://i.imgur.com/ocrUE94.jpeg",
+	"2468": "https://i.imgur.com/NhRU6Bh.jpeg",
+	"2582": "https://i.imgur.com/Q94yjWH.jpeg"
+}
+function getImages() {
+	return demo_images
+}
 async function updateScoutingData() {
 	//TODO: put code here to get scouting data from website
 	return {
@@ -499,49 +509,59 @@ function getTeamScoutData(team_num) {
 function setup_graph(scouting_data, team_number, selecting) {
 	if(selecting) {
 		var data = [];
-		var scouters = [];
+		var color_map = {}
+		for (var i = 0; i < selected_teams.length; i++) {
+			color_map[selected_teams[i]] = color_discrete_sequence[i]
+		}
 
 		filtered_scouting_data = scouting_data["data"].filter((e) => e["frc_team"] == team_number && e["event_key"] == event_key)
 		filtered_scouting_data.sort((a, b) => a.match_number - b.match_number)
 
 		console.log(filtered_scouting_data)
-		for (const key in filtered_scouting_data) {
-			obj = filtered_scouting_data[key]
-			scouters.push(obj.scouted_by);
-		}
+		const scouters = filtered_scouting_data.map((e) => e["scouted_by"])
+		const matchNumbers = filtered_scouting_data.map((e) => e["match_numbers"])
+		const hoverText = filtered_scouting_data.map((e) => 
+			"<b>Scouter:</b> " + e["scouted_by"] + "<br>" + 
+			"<b>Match Number:</b> " + e["match_number"]
+		)
 		var trace = {
 			x: [],
 			y: [],
-			text: [],
-			customdata: scouters,
-			hovertemplate:
-				"<i>Notes</i>: %{y}" + "<br><i>Scouter</i>: %{customdata}</br>",
+			text: hoverText, 
+			//customdata: {"scouters": scouters, "matchNumbers": matchNumbers},
+			//hovertemplate:
+			//	"<i>Notes</i>: %{y}" + "<br><i>Scouter</i>: %{customdata.scouters}</br>",
 			name: team_number,
-			type: "line"
+			type: "line",
+			marker: {
+				color: color_map[team_number]
+			}
 		};
 
 		for (const key in filtered_scouting_data) {
 			obj = filtered_scouting_data[key]
 			trace.y.push(obj[current_stat]);
+			console.log(current_stat)
 			trace.text.push(obj[current_stat]);
 		}
-		console.log(filtered_scouting_data.keys())
 		trace.x = [...Array(filtered_scouting_data.length).keys()];
 
-		console.log(trace);
-		data.push(trace);
+		const trend_trace = getTrendline(trace.x, trace.y, team_number, color_map[team_number])
+
+		data.push(trace, trend_trace);
 
 		if (plot.data) {
 			data = [...plot.data, ...data]
-			Plotly.react(plot, data, layout);
+			Plotly.react(plot, data, layout, {displayModeBar:false});
 		} else {
-			Plotly.newPlot(plot, data, layout);
+			Plotly.newPlot(plot, data, layout, {displayModeBar:false});
 		}
 		console.log(plot.data)
 	} else {
+		console.log(plot.data)
 		const newData = plot.data.filter((trace) => trace["name"] != team_number)
 
-		Plotly.react(plot, newData, plot.layout)
+		Plotly.react(plot, newData, layout, {displayModeBar:false});
 	}
 }
   
@@ -590,4 +610,63 @@ function clearPlot () {
 	selected_teams = []
 	scout_stat_picker.value = "none"
 	current_stat = undefined
+}
+
+function linearRegression(x,y){
+	var lr = {};
+	var n = y.length;
+	var sum_x = 0;
+	var sum_y = 0;
+	var sum_xy = 0;
+	var sum_xx = 0;
+	var sum_yy = 0;
+
+	for (var i = 0; i < y.length; i++) {
+
+		sum_x += x[i];
+		sum_y += y[i];
+		sum_xy += (x[i]*y[i]);
+		sum_xx += (x[i]*x[i]);
+		sum_yy += (y[i]*y[i]);
+	} 
+
+	lr['sl'] = (n * sum_xy - sum_x * sum_y) / (n*sum_xx - sum_x * sum_x);
+	lr['off'] = (sum_y - lr.sl * sum_x)/n;
+	lr['r2'] = Math.pow((n*sum_xy - sum_x*sum_y)/Math.sqrt((n*sum_xx-sum_x*sum_x)*(n*sum_yy-sum_y*sum_y)),2);
+
+	return lr;
+}
+
+function getTrendline(x,y,team_number, color) {
+	var x_data_64 = x;
+	var y_data_64 = y;
+	var lr = linearRegression(x_data_64, y_data_64);
+
+	var fit_from = Math.min(...x_data_64)
+	var fit_to = Math.max(...x_data_64)
+
+	var trace = {
+		x: x_data_64,
+		y: y_data_64,
+		name: "Scatter"
+	};  
+
+	var fit = {
+		x: [fit_from, fit_to],
+		y: [fit_from*lr.sl+lr.off, fit_to*lr.sl+lr.off],
+		mode: 'lines',
+		name: "trend: " + team_number,
+		showlegend: false,
+		marker: {
+			color: color,
+		},
+		line: {
+			dash: "dot",
+			width:4,
+		},
+		opacity: 0.6
+	};
+
+	//console.log(fit);
+	return fit
 }

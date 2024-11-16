@@ -23,7 +23,7 @@ var scout_stat_template = document.querySelector(".stat_option").cloneNode(true)
 
 const team_number = 6377;
 const year = new Date().getFullYear();
-const APIKey = "";
+const APIKey = "UVsAfK9zInMmgPxhfmdEvqPThM51zgyZL7sP6mLFRTPAZtvzbwFyL6yifjbnvcbU";
 
 document.getElementById("team_stat_chart_option").remove();
 
@@ -34,7 +34,6 @@ setupStatPicker();
 scout_stat_picker.onchange = changeStatGraph;
 
 var layout = {
-    barmode: "group",
     autosize: true,
     width: plot.offsetWidth,
     height: plot.offsetHeight,
@@ -47,7 +46,6 @@ var layout = {
     },
     paper_bgcolor: "#FFFFFF00",
     plot_bgcolor: "#FFFFFF00",
-    barcornerradius: 5,
     showlegend: true,
     legend: {
         font: {
@@ -64,12 +62,40 @@ var layout = {
             size: 14,
             color: "rgb(150, 150, 150)",
         },
+        gridcolor: "rgb(100, 100, 100)"
+
     },
 
     yaxis: {
+        min: 0,
         tickfont: {
             size: 14,
             color: "rgb(150, 150, 150)",
         },
+        gridcolor: "rgb(100, 100, 100)"
     },
 };
+
+const color_discrete_sequence = [
+    "dodgerBlue",
+    "fireBrick",
+    "darkGreen",
+    "orange",
+    "yellow",
+    "pink",
+    "purple",
+    "aqua",
+    "brown",
+    "darkOliveGreen",
+    "blue",
+    "red",
+    "greenYellow",
+    "indigo",
+    "maroon",
+    "midnightBlue",
+    "olive",
+    "teal",
+    "tan",
+    "slateGrey",
+    "royalBlue"
+]
