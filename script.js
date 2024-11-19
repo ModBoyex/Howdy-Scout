@@ -44,6 +44,7 @@ var layout = {
         t: 5,
         pad: 4,
     },
+    hovermode: "x unified",
     paper_bgcolor: "#FFFFFF00",
     plot_bgcolor: "#FFFFFF00",
     showlegend: true,
