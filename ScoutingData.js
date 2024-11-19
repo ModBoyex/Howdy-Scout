@@ -522,7 +522,8 @@ function setup_graph(scouting_data, team_number, selecting) {
 		const matchNumbers = filtered_scouting_data.map((e) => e["match_numbers"])
 		const hoverText = filtered_scouting_data.map((e) => 
 			"<b>Scouter:</b> " + e["scouted_by"] + "<br>" + 
-			"<b>Match Number:</b> " + e["match_number"]
+			"<b>Match Number:</b> " + e["match_number"] + "<br>" + 
+			`<b>${current_stat}:</b> ${e[current_stat]}`
 		)
 		var trace = {
 			x: [],
