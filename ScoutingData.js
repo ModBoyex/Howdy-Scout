@@ -556,10 +556,8 @@ function setup_graph(scouting_data, team_number, selecting) {
 		} else {
 			Plotly.newPlot(plot, data, layout, {displayModeBar:false});
 		}
-		console.log(plot.data)
 	} else {
-		console.log(plot.data)
-		const newData = plot.data.filter((trace) => trace["name"] != team_number)
+		const newData = plot.data.filter((trace) => !trace["name"].match(team_number))
 
 		Plotly.react(plot, newData, layout, {displayModeBar:false});
 	}

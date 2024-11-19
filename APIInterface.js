@@ -146,7 +146,7 @@ async function updateStatsTable() {
       }
     }
 
-    rows.sort((a,b) => a.childNodes.item(5).textContent - b.childNodes.item(5).textContent)
+    rows.sort((a,b) => b.childNodes.item(7).textContent - a.childNodes.item(7).textContent)
     team_stat_chart.innerHTML = "";
     team_stat_chart.appendChild(team_stat_chart_labels);  
     team_stat_chart.append(...rows)
