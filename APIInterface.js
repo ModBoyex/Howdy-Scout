@@ -17,10 +17,13 @@ async function requestAPI(url, apiKey) {
 }
 
 function resetStats() {
-  // team_rank_element.textContent = "-";
-  // team_opr_element.textContent = "-";
-  // team_epa_element.textContent = "-";
-  return null;
+  Array.from(team_stat_chart.children).forEach((child) => {
+    if (child.id != "team_stat_chart_labels") {
+      child.remove()
+    }
+  })
+
+  clearPlot()
 }
 
 function addEventsToEventList(event) {
@@ -67,6 +70,8 @@ async function fetchEventTeamsInfo() {
 
   resetStats();
 
+  document.querySelector("#team_list").innerHTML = document.querySelector("#team_option").outerHTML
+
   try {
     current_data = await requestAPI(event_teams_url, APIKey);
     console.log(current_data);
@@ -77,31 +82,33 @@ async function fetchEventTeamsInfo() {
 
   var team_option_list = document.getElementsByClassName("glassOption");
   for (let i = 0; i < team_option_list.length; i++) {
-    team_option_list[i].classList.add("selected");
-
     team_option_list[i].onclick = () => {
+      const team_number = team_option_list[i].textContent.match(/\d+(?= - )/g)[0]
       // Check if the element has the "selected" class
       if (!team_option_list[i].classList.contains("selected")) {
         // Add the "selected" class to indicate the item is selected
         team_option_list[i].classList.add("selected");
-        team_option_list[i].style.backgroundColor = "#00000033"; // Mark selected
+        selected_teams.push(team_number)
       } else {
         // Remove the "selected" class
         team_option_list[i].classList.remove("selected");
-        team_option_list[i].style.backgroundColor = "#FFFFFF33"; // Mark deselected
+        selected_teams.splice(selected_teams.indexOf(team_number),1)
       }
 
       // Log whether the element is selected or not
       console.log("Is selected: " + team_option_list[i].classList.contains("selected"));
       console.log("I clicked on " + team_option_list[i].textContent);
 
-      updateStatGraph();
+      updateStatGraph(team_number, team_option_list[i].classList.contains("selected"));
+      updateStatsTable()
+      updateRobotImages(team_number, team_option_list[i].classList.contains("selected"))
     }
   }
 }
 
 
-function addTeamStat(opr_list, rank_list, this_team_number, this_team_name) {
+
+function getTeamStats (opr_list, rank_list, this_team_number, this_team_name) {
   new_option = team_stat_chart_template.cloneNode(true);
   new_option.id = team_stat_index;
   new_option.childNodes.item(1).textContent = this_team_name;
@@ -113,11 +120,10 @@ function addTeamStat(opr_list, rank_list, this_team_number, this_team_name) {
   });
   new_option.childNodes.item(7).textContent = `${opr_list.oprs[this_team_number].toFixed(2)}`;
 
-
-  team_stat_chart.appendChild(new_option);
+  return new_option
 }
 
-async function updateStatGraph() {
+async function updateStatsTable() {
   // API endpoint for team information
   const event_opr_url = `https://www.thebluealliance.com/api/v3/event/${event_key}/oprs`;
   const event_rank_url = `https://www.thebluealliance.com/api/v3/event/${event_key}/rankings`;
@@ -125,8 +131,6 @@ async function updateStatGraph() {
   var opr_list;
   var rank_list;
 
-  team_stat_chart.innerHTML = "";
-  team_stat_chart.appendChild(team_stat_chart_labels);
   team_stat_index = 0;
 
   try {
@@ -134,12 +138,38 @@ async function updateStatGraph() {
     rank_list = await requestAPI(event_rank_url, APIKey);
 
     option_list = document.getElementsByClassName("glassOption");
+
+    let rows = []
     for (let i = 1; i < option_list.length; i++) {
-      if (!option_list[i].classList.contains("selected")) {
-        addTeamStat(opr_list, rank_list, option_list[i].value, option_list[i].textContent.split(" - ")[1]);
+      if (option_list[i].classList.contains("selected")) {
+        rows.push(getTeamStats(opr_list, rank_list, option_list[i].value, option_list[i].textContent.split(" - ")[1]))
       }
     }
+
+    rows.sort((a,b) => b.childNodes.item(7).textContent - a.childNodes.item(7).textContent)
+    team_stat_chart.innerHTML = "";
+    team_stat_chart.appendChild(team_stat_chart_labels);  
+    team_stat_chart.append(...rows)
   } catch (error) {
     console.error(error);
+  }
+}
+
+function updateRobotImages(team_number, selected) {
+  var container = document.querySelector("#team_pictures")
+  if (selected) {
+    const images = getImages()
+
+    let element = document.querySelector(".robot_image_container").cloneNode(true)
+    element.className = "robot_image_container"
+    element.querySelector("img")["src"] = images[team_number]
+    element.id = "robot_image_" + team_number
+    element.querySelector(".imageLabel").textContent = team_number
+
+    element.classList.remove("hidden")
+    
+    container.append(element)
+  } else {
+    document.querySelector(`#robot_image_${team_number}`).remove()
   }
 }

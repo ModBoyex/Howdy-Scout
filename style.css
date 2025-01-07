@@ -92,13 +92,78 @@ body {
     font-family: var(--font);
 }
 
-.imageLabel {
-    transform: rotate(-90deg);
-}
-
-
 /* Styling the scroll bar */
 * {
     scrollbar-width: thin;
     scrollbar-color: rgba(0, 0, 0, 0.5) rgba(0, 0, 0, 0.1);
+}
+
+.glassOption {
+    background-color: #00000033;
+}
+
+.glassOption.selected {
+    background-color: #FFFFFF33 !important;
+}
+
+#team_stat_chart {
+    overflow: scroll; flex-direction: column; justify-content: flex-start;
+}
+
+.table_cell{
+    width: 60%; 
+    border-right: 2px solid rgba(0, 0, 0, 0.1);
+    scrollbar-width: none; 
+    overflow: scroll; 
+    white-space:nowrap;
+    padding: 5px;
+}
+
+.table_cell#NameLable {
+    width:180% !important;
+}
+
+#team_stat_chart_labels {
+    min-height: 30px; 
+    max-height: 25px; 
+    margin-top: 5px;
+}
+
+.table_row {
+    min-height: 30px; 
+    max-height: 25px; 
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+#team_pictures {
+    height: 100%; 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-around; 
+    flex-direction: row;
+}
+
+
+.team_image {
+    border-radius: 8px; 
+    height: 95%; 
+    margin-right: 10px;
+}
+
+.robot_image_container {
+    padding:5px;
+    margin:5px;
+    height:100%;
+    display:flex;
+    background-color: #00000033;
+}
+
+.imageLabel {
+    writing-mode: vertical-lr;
+    text-orientation: sideways-right;
+    margin-right:2px
+}
+
+.hidden {
+    display:none;
 }
